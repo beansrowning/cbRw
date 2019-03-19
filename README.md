@@ -1,4 +1,4 @@
-# cbRw, Coupled Biased Random Walks  
+# cbRw, Coupled Biased Random Walks  [![Build Status](https://travis-ci.org/beansrowning/cbRw.svg?branch=master)](https://travis-ci.org/beansrowning/cbRw)  
 Anomaly detection for complex categorical data  
 
 ## Overview  
@@ -7,7 +7,15 @@ Described by [Pang, Cao, and Chen (2016)](https://www.ijcai.org/Proceedings/16/P
 Also based on work by Daniel Kaslovsky in the Python implementation, [Coupled-Biased-Random-Walks
 ](https://github.com/dkaslovsky/Coupled-Biased-Random-Walks)
 
-## Work in progress
+## Installation  
+
+*Note that this is still very much developmental*  
+
+```r
+# Installation is straightforward with devtools
+# install.packages("devtools")
+devtools::install_github("beansrowning/cbRw")
+```  
 
 ## Public Domain
 This repository constitutes a work of the United States Government and is not
