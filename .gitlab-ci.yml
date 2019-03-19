@@ -29,8 +29,7 @@ check:
   stage: check
   script:
   - R --vanilla -e 'library(devtools);  tar_file <- file.path(getwd(), list.files(".",
-    pattern = ".tar.gz")); results <- devtools::check_built(tar_file); stopifnot(sum(sapply(results,
-    length)) <= 0)'
+    pattern = ".tar.gz")); results <- devtools::check_built(tar_file); stopifnot(sum(length(results$errors), length(results$warnings)) <= 0)'
   dependencies:
   - build
 
