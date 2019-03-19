@@ -1,0 +1,42 @@
+document:
+  stage: document
+  script:
+  - R --vanilla -e 'library(devtools);  devtools::document(); devtools::document()'
+  artifacts:
+    paths:
+    - man/
+    - NAMESPACE
+
+test:
+  stage: test
+  script:
+  - R --vanilla -e 'library(devtools); library(testthat); devtools::test(reporter
+    = StopReporter)'
+  dependencies:
+  - document
+
+build:
+  stage: build
+  script:
+  - R --vanilla -e 'library(devtools); devtools::build(path = "./")'
+  artifacts:
+    paths:
+    - '*.tar.gz'
+  dependencies:
+  - document
+
+check:
+  stage: check
+  script:
+  - R --vanilla -e 'library(devtools);  tar_file <- file.path(getwd(), list.files(".",
+    pattern = ".tar.gz")); results <- devtools::check_built(tar_file); stopifnot(sum(sapply(results,
+    length)) <= 0)'
+  dependencies:
+  - build
+
+stages:
+- document
+- test
+- build
+- check
+
