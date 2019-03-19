@@ -10,7 +10,7 @@
 #'    \item \strong{Wb} the biased transition matrix
 #' }
 #' @import dplyr
-#' @import tidyr
+#' @importFrom tidyr spread
 #' @import rlang
 #' @export
 biased_trans_matrix <- function(data, all_data = FALSE) {
@@ -58,12 +58,16 @@ biased_trans_matrix <- function(data, all_data = FALSE) {
   # division
   A <- bind_rows(nodes, edges) %>%
     dplyr::select(u, v, p) %>%
-    tidyr::spread(v, p, fill = 0L) %>%
+    tidyr::spread(v, p, fill = 0) %>%
     dplyr::select(-u) %>%
     as.matrix()
 
   # Compute A(u,v)
-  A[lower.tri(A)] <- t(A)[lower.tri(A)]
+  # HACK: A + t(A) and halfing the diagonal
+  # is both faster and less memory intensive
+  # than A[lower.tri(A)] <- t(A)[lower.tri(A)]
+  A <- A + t(A)
+  diag(A) <- diag(A) / 2
   A <- A / diag(A)
   A <- t(A)
   diag(A) <- 0
@@ -80,54 +84,38 @@ biased_trans_matrix <- function(data, all_data = FALSE) {
 
   # If we want additional data, tidy things up a bit
   nodes <- nodes %>%
-    mutate(name = feature_values[u]) %>%
-    select(feature, name, freq, p, intra_dev, is_mode)
+    dplyr::mutate(name = feature_values[u]) %>%
+    dplyr::select(feature, name, freq, p, intra_dev, is_mode)
 
   out <- list(
     nodes = nodes,
     edges = edges,
-    Wb = Wb
+    Wb = Wb,
+    data = converted[[1]]
   )
 
   return(out)
 }
 
-# TODO: Make a nodes + Wb -> tbl_graph and viz
-# function
-plot_cbrw <- function(...) {
-  # TODO
-  hollow_edges <- bind_rows(
-    select(edges, u, v, group),
-    select(edges, v = u, u = v, group)
-  )
+# Internal Random-walk function used to calculate the stationary probabilities
+# pi*
+random_walk <- function(trans_matrix, alpha = 0.95, err_tol = 0.001, max_iter = 100) {
+  
+  n <- dim(trans_matrix)[1L]
+  dampen_vec <- rep(1, n) * ( (1 - alpha) / n )
 
-  new_edges <- Wb %>%
-    as.data.frame() %>%
-    setNames(seq_along(.)) %>%
-    mutate(u = row_number()) %>%
-    gather("v", "weight", -u) %>%
-    mutate(v = as.integer(v)) %>%
-    right_join(hollow_edges, by = c("u", "v")) %>%
-    rename(from = u, to = v)
+  pi_t <- (1 / n) * rep(1, n)
 
-  graph_out <- tbl_graph(
-    nodes = rename(nodes, from = u, to = v),
-    edges = new_edges
-  )
+  for (i in seq_len(max_iter)) {
+    pi_next <- dampen_vec + (alpha * t(trans_matrix) %*% pi_t)
+    err <- norm(pi_t - pi_next, type = "I")
 
-  graph_plot <- graph_out %>%
-    ggraph("drl") +
-    geom_edge_arc(
-      arrow = arrow(length = unit(4, "mm")),
-      aes(edge_width = (weight / max(weight)) * 0.01),
-      alpha = 0.4
-    ) +
-    geom_node_point(
-      aes(size = intra_dev),
-      color = "red"
-    ) +
-    geom_node_text(
-      aes(label = feature_values[to]),
-      vjust = -0.6
-    )
+    pi_t <- pi_next
+
+    if (err <= err_tol) {
+      break
+    }
+  }
+
+  return(pi_t)
 }
