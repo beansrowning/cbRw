@@ -1,11 +1,11 @@
 # TODO: Probably consolidate, or just build an R6 class
-#' @title Counting helper functions
-#' @name counting_helpers
+# @title Counting helper functions
+# @name counting_helpers
 
-#' @rdname counting_helpers
-#' @param data a tibble of categorical data
-#' @return a tibble containing all unique combinations of feature values
-#'    with columns: \emph{u}, \emph{v}, \emph{freq}, emph{p}, and \emph{feature}
+# @rdname counting_helpers
+# @param data a tibble of categorical data
+# @return a tibble containing all unique combinations of feature values
+#    with columns: \emph{u}, \emph{v}, \emph{freq}, emph{p}, and \emph{feature}
 intra_freq <- function(data) {
   var_quos <- lapply(names(data), as.name)
 
@@ -30,12 +30,14 @@ intra_freq <- function(data) {
   return(out)
 }
 
-#' Helper function to calculate all bivariate frequencies
-#' within the dataset
-#' @param data a tibble of categorical data
-#' @return a tibble containing all unique combinations of feature values
-#'    with columns: \emph{u}, \emph{v}, \emph{freq}, and \emph{group}
-#' @rdname counting_helpers
+# Helper function to calculate all bivariate frequencies
+# within the dataset
+# @param data a tibble of categorical data
+# @return a tibble containing all unique combinations of feature values
+#    with columns: \emph{u}, \emph{v}, \emph{freq}, and \emph{group}
+# @rdname counting_helpers
+#' @importFrom utils combn
+#' @importFrom stats setNames
 inter_freq <- function(data) {
 
   # Calculate all 2 variable combinations of variables
