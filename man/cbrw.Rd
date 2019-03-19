@@ -2,11 +2,17 @@
 % Please edit documentation in R/cbrw.R
 \name{cbrw}
 \alias{cbrw}
-\title{Coupled Biased Random Walks  
- TODO}
+\title{Coupled Biased Random Walks}
 \usage{
 cbrw(data)
 }
 \arguments{
 \item{data}{a data.frame containing catgorical data}
+}
+\value{
+the input data frame with an additional \emph{score} variable representing
+       relative outlier-ness of the observation
+}
+\description{
+TODO
 }

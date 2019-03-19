@@ -1,7 +1,7 @@
 #' @title Coupled Biased Random Walks  
-#'  TODO
+#' @description TODO
 #' @param data a data.frame containing catgorical data
-#' @value the input data frame with an additional \emph{score} variable representing
+#' @return the input data frame with an additional \emph{score} variable representing
 #'        relative outlier-ness of the observation
 #' @export
 cbrw <- function(data) {
