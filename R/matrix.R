@@ -1,4 +1,8 @@
 #' @title Generate Biased Transition Matrix
+#' @description
+#' Takes in a data.frame of categorical data and returns a weighted transition matrix
+#' which characterizes the edge weights of a directed graph representation of the inter-feature value couplings
+#'
 #' @param data a data.frame containing mosly categorical data
 #' @param all_data a boolean (default: FALSE) on whether to return additional node and edge data (see Note)
 #' @return a biased transition matrix of dim [k,k] where k is the number of unique feature values

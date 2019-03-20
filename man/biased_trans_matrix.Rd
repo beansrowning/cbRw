@@ -14,6 +14,10 @@ biased_trans_matrix(data, all_data = FALSE)
 \value{
 a biased transition matrix of dim [k,k] where k is the number of unique feature values
 }
+\description{
+Takes in a data.frame of categorical data and returns a weighted transition matrix
+which characterizes the edge weights of a directed graph representation of the inter-feature value couplings
+}
 \section{Note}{
 
 If all_data is `TRUE`, A list with three members will be returned:

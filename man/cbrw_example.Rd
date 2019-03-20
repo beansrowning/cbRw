@@ -3,10 +3,13 @@
 \docType{data}
 \name{cbrw_example}
 \alias{cbrw_example}
-\title{CBRW paper exmaple dataset
-Example dataset as shown on the first page of the paper}
+\title{CBRW paper exmaple dataset}
 \format{An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 12 rows and 5 columns.}
 \usage{
 cbrw_example
+}
+\description{
+See dataset in cited paper (TODO)
+Example dataset as shown on the first page of the paper
 }
 \keyword{datasets}
