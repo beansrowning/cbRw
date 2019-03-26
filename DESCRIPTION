@@ -1,7 +1,7 @@
 Package: cbRw
 Title: Coupled Biased Random Walks
-Version: 0.0.1
-Authors@R: person("Sean", "Browning", email = "sbrowning@cdc.gov", role = c("aut", "cre"))
+Version: 0.1
+Authors@R: person("Sean", "Browning", email = "sbrowning [at] cdc [dot] gov", role = c("aut", "cre"))
 Description: An R implementation of the CBRW algorithm for anomaly detection on categorical data. 
 Depends: R (>= 3.5.0)
 Imports:
