@@ -6,6 +6,12 @@
 \usage{
 feature_relevance(data)
 }
+\arguments{
+\item{data}{A tibble as provided by the output of a cbrw call}
+}
+\value{
+a tibble containing each feature with it's computed relevance
+}
 \description{
 TODO
 }
