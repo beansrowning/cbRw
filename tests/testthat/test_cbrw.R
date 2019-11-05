@@ -25,3 +25,33 @@ test_that("Score values are equal to canonical", {
 
   expect_equal(cbrw_example$score, canonical)
 })
+
+test_that("Feature relevance is equal to canonical", {
+
+  # Canonical values pre-computed and verified from the Python CBRW package
+  # dkaslovsky/Coupled-Biased-Random-Walks
+  canonical <- c(
+    Education = 0.262728418353589,
+    Gender = 0.16078750024988,
+    Income = 0.293898197381611,
+    Marriage = 0.282585884014921
+  )
+
+  # Process data and compare values
+  data(cbrw_example)
+  
+  cbrw_output <- cbrw(cbrw_example[, names(cbrw_example) != "Cheat?"])
+  cbrw_feature_rel <- unlist(feature_relevance(cbrw_output))
+
+  expect_equal(cbrw_feature_rel, canonical)
+})
+
+test_that("Feature relevance sums to 1", {
+  # Feature relevance should always sum to 1, else something has gone horribly awry
+  data(cbrw_example)
+
+  cbrw_output <- cbrw(cbrw_example)
+  cbrw_feature_rel <- sum(unlist(feature_relevance(cbrw_output)))
+
+  expect_equal(1, cbrw_feature_rel)
+})
