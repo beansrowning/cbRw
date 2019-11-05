@@ -36,3 +36,11 @@ categorical_to_int <- function(data) {
     all_fact
   )
 }
+
+#' @title Display the computed feature relevance in the CBRW model
+#' @description TODO
+#' 
+#' @export
+feature_relevance <- function(data) {
+  attr(data, "feature_rel")
+}
