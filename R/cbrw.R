@@ -38,6 +38,11 @@ cbrw <- function(data) {
   # Append the observation scores and return
   data <- data %>%
     dplyr::mutate(score = obs_scores)
+  
+  # Assign feature relevance to an attribute
+  attr(data, "feature_rel") <- computed$nodes %>%
+    dplyr::distinct(feature, rel) %>%
+    tidyr::spread(feature, rel)
 
   return(data)
   

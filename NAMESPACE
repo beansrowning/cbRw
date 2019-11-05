@@ -2,6 +2,7 @@
 
 export(biased_trans_matrix)
 export(cbrw)
+export(feature_relevance)
 import(Matrix)
 import(dplyr)
 import(rlang)
