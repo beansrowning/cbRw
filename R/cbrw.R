@@ -3,6 +3,7 @@
 #' @param data a data.frame containing catgorical data
 #' @return the input data frame with an additional \emph{score} variable representing
 #'        relative outlier-ness of the observation
+#' @importFrom tidyr spread
 #' @export
 cbrw <- function(data) {
   # TODO: defensive programming for type, id vars, high-dimensionality
@@ -12,7 +13,7 @@ cbrw <- function(data) {
   computed <- biased_trans_matrix(data, all_data = TRUE)
 
   # Run random walk on Wb
-  pi_t <- random_walk(computed$Wb)
+  pi_t <- as.matrix(random_walk(computed$Wb))
 
   # Compute feature relevance and use that to compute
   # the value score for each feature value
@@ -39,5 +40,5 @@ cbrw <- function(data) {
     dplyr::mutate(score = obs_scores)
 
   return(data)
-
+  
 }
