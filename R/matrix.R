@@ -14,7 +14,7 @@
 #'    \item \strong{Wb} the biased transition matrix
 #' }
 #' @import dplyr
-#' @importFrom tidyr spread
+#' @import Matrix
 #' @import rlang
 #' @export
 biased_trans_matrix <- function(data, all_data = FALSE) {
@@ -61,26 +61,25 @@ biased_trans_matrix <- function(data, all_data = FALSE) {
   # of p(u,v) values and then use simple matrix
   # division
   A <- bind_rows(nodes, edges) %>%
-    dplyr::select(u, v, p) %>%
-    tidyr::spread(v, p, fill = 0) %>%
-    dplyr::select(-u) %>%
-    as.matrix()
+    dplyr::select(u, v, p)
+
+  A <- Matrix::sparseMatrix(A$u, A$v, x = A$p)
 
   # Compute A(u,v)
   # HACK: A + t(A) and halfing the diagonal
   # is both faster and less memory intensive
   # than A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  A <- A + t(A)
-  diag(A) <- diag(A) / 2
-  A <- A / diag(A)
-  A <- t(A)
-  diag(A) <- 0
+  A <- A + Matrix::t(A)
+  Matrix::diag(A) <- Matrix::diag(A) / 2
+  A <- A / Matrix::diag(A)
+  A <- Matrix::t(A)
+  Matrix::diag(A) <- 0
 
   # Compute Wb(u,v) for all values
   # Wb(u,v) = (sigma(v) * A(u,v)) / SUM(sigma(v) * A(u,v), forall v in V)
   delta_v <- nodes[["intra_dev"]]
-  Wb <- t(t(A) * delta_v)
-  Wb <- Wb / rowSums(Wb)
+  Wb <- Matrix::t(Matrix::t(A) * delta_v)
+  Wb <- Wb / Matrix::rowSums(Wb)
 
   if (!all_data) {
     return(Wb)
@@ -111,8 +110,8 @@ random_walk <- function(trans_matrix, alpha = 0.95, err_tol = 0.001, max_iter = 
   pi_t <- (1 / n) * rep(1, n)
 
   for (i in seq_len(max_iter)) {
-    pi_next <- dampen_vec + (alpha * t(trans_matrix) %*% pi_t)
-    err <- norm(pi_t - pi_next, type = "I")
+    pi_next <- dampen_vec + (alpha * Matrix::t(trans_matrix) %*% pi_t)
+    err <- Matrix::norm(pi_t - pi_next, type = "I")
 
     pi_t <- pi_next
 
